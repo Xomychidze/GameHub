@@ -1,0 +1,19 @@
+.header{
+  display: flex;
+  justify-content: space-around;
+
+}
+
+
+.actions{
+  display: flex;
+  justify-content: space-around;
+  color: var(--text-main);
+}
+
+.actions button{
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+

@@ -1,0 +1,84 @@
+/* You can add global styles to this file, and also import other style files */
+@import url(fonts.scss);
+
+:root {
+  --bg-main: #0f172a;       /* тёмно-синий */
+  --bg-secondary: #1e293b;  /* карточки */
+
+  --text-main: #e2e8f0;
+  --text-secondary: #94a3b8;
+
+  --accent: #22c55e;        /* зелёный (покупка) */
+  --accent-hover: #16a34a;
+
+  --danger: #ef4444;
+}
+
+/* ===== CSS RESET ===== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  padding-top: 10px;
+}
+
+/* Убираем стандартные стили списков */
+ul, ol {
+  list-style: none;
+}
+
+/* Убираем стили ссылок */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Картинки */
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* Формы */
+input, button, textarea, select {
+  font: inherit;
+  border: none;
+  outline: none;
+}
+
+/* Кнопки */
+button {
+  cursor: pointer;
+  background: none;
+}
+
+/* Таблицы */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: "JetBrains Mono", sans-serif;
+}
+
+/* Контейнер */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
