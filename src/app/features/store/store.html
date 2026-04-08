@@ -1,1 +1,37 @@
-<p>store works!</p>
+<app-header></app-header>
+
+<div class="page-wrapper">
+  <div class="container">
+
+    <!-- Page heading -->
+    <div class="store-header">
+      <h1 class="section-title">Game <span>Store</span></h1>
+
+    </div>
+
+    <!-- Filters & Sort -->
+    <div class="filters-bar">
+      <div class="genre-filters">
+
+      </div>
+
+      <div class="sort-wrap">
+        <label>Sort by</label>
+
+      </div>
+    </div>
+
+    <!-- Game Grid -->
+
+
+    <ng-template #noResults>
+      <div class="no-results">
+        <span class="no-results-icon">◈</span>
+        <p>No games found for this filter.</p>
+      </div>
+    </ng-template>
+
+  </div>
+</div>
+
+<app-footer></app-footer>

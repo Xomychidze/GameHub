@@ -5,6 +5,7 @@ import {CartComponent} from './features/cart-component/cart-component';
 import {LibraryComponent} from './features/library-component/library-component';
 import {LoginComponent} from './features/login-component/login-component';
 import {GameDetailComponent} from './features/game-detail-component/game-detail-component';
+import { Store } from './features/store/store';
 import { Component } from '@angular/core';
 
  export const routes: Routes = [
@@ -16,6 +17,7 @@ import { Component } from '@angular/core';
   {path: 'register', component: RegisterComponent},
   {path: 'library', component: LibraryComponent},
   {path: 'games/:id', component: GameDetailComponent},
+  {path: 'store', component: Store},
 ];
 
 

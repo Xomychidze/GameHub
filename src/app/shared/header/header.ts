@@ -1,8 +1,11 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [RouterModule,  // <- обязательно здесь
+    CommonModule,],
   templateUrl: './header.html',
   styleUrl: './header.css',
 })

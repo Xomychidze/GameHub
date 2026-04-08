@@ -1,84 +1,146 @@
-/* You can add global styles to this file, and also import other style files */
-@import url(fonts.scss);
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
 
 :root {
-  --bg-main: #0f172a;       /* тёмно-синий */
-  --bg-secondary: #1e293b;  /* карточки */
-
-  --text-main: #e2e8f0;
-  --text-secondary: #94a3b8;
-
-  --accent: #22c55e;        /* зелёный (покупка) */
-  --accent-hover: #16a34a;
-
-  --danger: #ef4444;
+  --color-bg:           #0b0b18;
+  --color-surface:      #13132a;
+  --color-card:         #1a1a38;
+  --color-card-hover:   #1f1f46;
+  --color-accent:       #6c5fff;
+  --color-accent-hover: #7d72ff;
+  --color-accent-dim:   rgba(108, 95, 255, 0.15);
+  --color-danger:       #ff3d5a;
+  --color-gold:         #ffc000;
+  --color-success:      #00c87a;
+  --color-text:         #dcdcf5;
+  --color-text-muted:   #6a6a95;
+  --color-border:       rgba(108, 95, 255, 0.2);
+  --color-border-hover: rgba(108, 95, 255, 0.5);
+  --font-display: 'Orbitron', 'Courier New', monospace;
+  --font-body:    'Rajdhani', system-ui, sans-serif;
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-xl:  24px;
+  --transition: 0.2s ease;
+  --header-h:   64px;
 }
 
-/* ===== CSS RESET ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html, body {
-  height: 100%;
-}
+html { scroll-behavior: smooth; }
 
 body {
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  padding-top: 10px;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 100vh;
 }
 
-/* Убираем стандартные стили списков */
-ul, ol {
-  list-style: none;
-}
+a { color: inherit; text-decoration: none; }
 
-/* Убираем стили ссылок */
-a {
-  text-decoration: none;
-  color: inherit;
-}
+img { display: block; width: 100%; object-fit: cover; }
 
-/* Картинки */
-img, picture, video, canvas, svg {
-  display: block;
-  max-width: 100%;
-}
+button { font-family: var(--font-body); cursor: pointer; border: none; }
 
-/* Формы */
-input, button, textarea, select {
-  font: inherit;
-  border: none;
+input, select, textarea {
+  font-family: var(--font-body);
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: 15px;
   outline: none;
+  transition: border-color var(--transition);
 }
 
-/* Кнопки */
-button {
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-accent);
+}
+
+input::placeholder { color: var(--color-text-muted); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: all var(--transition);
   cursor: pointer;
-  background: none;
 }
 
-/* Таблицы */
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
+.btn-primary {
+  background: var(--color-accent);
+  color: #fff;
+  border: none;
+}
+.btn-primary:hover { background: var(--color-accent-hover); transform: translateY(-1px); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+}
+.btn-outline:hover { background: var(--color-accent-dim); }
+
+.btn-danger {
+  background: var(--color-danger);
+  color: #fff;
+  border: none;
+}
+.btn-danger:hover { opacity: 0.85; }
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-body {
-  background-color: var(--bg-main);
-  color: var(--text-main);
-  font-family: "JetBrains Mono", sans-serif;
+.badge-genre {
+  background: rgba(108, 95, 255, 0.2);
+  color: #a89bff;
+  border: 1px solid rgba(108, 95, 255, 0.35);
 }
 
-/* Контейнер */
+.stars {
+  color: var(--color-gold);
+  font-size: 14px;
+  letter-spacing: 2px;
+}
+
+.page-wrapper {
+  min-height: calc(100vh - var(--header-h));
+  padding-top: var(--header-h);
+}
+
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 24px;
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  margin-bottom: 24px;
+}
+
+.section-title span {
+  color: var(--color-accent);
 }
