@@ -26,90 +26,77 @@
 
   @else {
 
-    <!-- HERO -->
+    <!-- HERO — заголовок прямо поверх изображения -->
     <section class="hero" [style.backgroundImage]="'url(' + game.image + ')'">
       <div class="hero-overlay"></div>
+
       <div class="hero-content container">
-        <nav class="breadcrumb">
-          <a routerLink="/">Главная</a>
-          <span>/</span>
-          <a routerLink="/catalog">Каталог</a>
-          <span>/</span>
-          <span class="current">{{ game.title }}</span>
-        </nav>
+
+        <div class="hero-meta">
+          <span class="badge badge-genre">{{ game.genre.name }}</span>
+          @if (game.developer) {
+            <span class="hero-tag">{{ game.developer }}</span>
+          }
+          @if (game.releaseDate) {
+            <span class="hero-tag muted">{{ game.releaseDate }}</span>
+          }
+        </div>
+
+        <h1 class="game-title">{{ game.title }}</h1>
+
+        <div class="rating-row">
+          <span class="stars">★★★★★</span>
+          <span class="rating-score">{{ game.rating }} / 5</span>
+        </div>
       </div>
     </section>
 
     <!-- КОНТЕНТ -->
     <div class="game-layout container">
 
-      <!-- ЛЕВАЯ КОЛОНКА -->
-      <aside class="game-cover-col">
+      <!-- ПРАВАЯ КОЛОНКА (sidebar) -->
+      <aside class="game-sidebar">
 
-        <div class="cover-wrap">
-          <img class="cover-img" [src]="game.image" [alt]="game.title" />
-          @if (game.discount) {
-            <div class="discount-badge">-{{ game.discount }}%</div>
-          }
-        </div>
-
-        <div class="buy-box">
-          <div class="price-row">
-            @if (game.originalPrice) {
-              <span class="price-original">{{ game.originalPrice }} ₸</span>
+        <!-- Обложка с ценой поверх -->
+        <div class="cover-card">
+          <div class="cover-wrap">
+            <img class="cover-img" [src]="game.image" [alt]="game.title" />
+            <div class="cover-gradient"></div>
+            @if (game.discount) {
+              <div class="discount-badge">-{{ game.discount }}%</div>
             }
-            <span class="price-final">{{ game.price }} ₸</span>
+            <div class="cover-price">
+              @if (game.originalPrice) {
+                <span class="price-original">{{ game.originalPrice }} ₸</span>
+              }
+              <span class="price-final">{{ game.price }} ₸</span>
+            </div>
           </div>
-          <button class="btn btn-primary btn-block">Добавить в корзину</button>
-          <button class="btn btn-outline btn-block">В список желаний</button>
-        </div>
 
-        <div class="meta-box">
-          <div class="meta-row">
-            <span class="meta-label">Жанр</span>
-            <span class="badge badge-genre">{{ game.genre.name }}</span>
-          </div>
-          @if (game.developer) {
-            <div class="meta-row">
-              <span class="meta-label">Разработчик</span>
-              <span class="meta-value">{{ game.developer }}</span>
-            </div>
-          }
-          @if (game.releaseDate) {
-            <div class="meta-row">
-              <span class="meta-label">Релиз</span>
-              <span class="meta-value">{{ game.releaseDate }}</span>
-            </div>
-          }
-          <div class="meta-row">
-            <span class="meta-label">ID</span>
-            <span class="meta-value">#{{ game.id }}</span>
+          <div class="buy-actions">
+            <button class="btn btn-primary btn-block btn-glow">Добавить в корзину</button>
+            <button class="btn btn-outline btn-block">В список желаний</button>
           </div>
         </div>
 
       </aside>
 
-      <!-- ПРАВАЯ КОЛОНКА -->
+      <!-- ЛЕВАЯ КОЛОНКА (основной контент) -->
       <main class="game-main">
 
-        <div class="game-header">
-          <h1 class="game-title">{{ game.title }}</h1>
-          <div class="rating-row">
-            <span class="stars">★★★★★</span>
-            <span class="rating-score">{{ game.rating }} / 5</span>
-          </div>
-        </div>
-
-        <p class="game-description">{{ game.description }}</p>
+        <section class="description-section">
+          <h2 class="section-title"><span class="title-line"></span> Об игре</h2>
+          <p class="game-description">{{ game.description }}</p>
+        </section>
 
         @if (game.screenshots?.length) {
           <section class="screenshots-section">
-            <h2 class="section-title">Скриншоты <span>&</span> Медиа</h2>
+            <h2 class="section-title"><span class="title-line"></span> Скриншоты</h2>
             <div class="screenshots-grid">
               @for (shot of game.screenshots; track shot; let i = $index) {
                 <div class="screenshot-item" [class.featured]="i === 0">
                   <img [src]="shot" [alt]="'Screenshot ' + (i + 1)" />
-                  <div class="screenshot-overlay">🔍</div>
+                  <div class="screenshot-overlay">⬡</div>
                 </div>
               }
             </div>
@@ -117,6 +104,7 @@
         }
 
       </main>
+
     </div>
 
   }
