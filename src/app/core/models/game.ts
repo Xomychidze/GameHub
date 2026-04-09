@@ -5,7 +5,7 @@ export interface Game {
   title: string;
   price: number;
   description: string;
-  cover_image: string;
+  image: string;
   rating: number;
   genre: Genre;
 }

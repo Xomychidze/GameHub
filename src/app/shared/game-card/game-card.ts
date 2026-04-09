@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { Game } from '../../core/models/game';
 
 @Component({
   selector: 'app-game-card',
-  imports: [],
+  standalone: true,
   templateUrl: './game-card.html',
   styleUrl: './game-card.css',
 })
-export class GameCard {
-
+export class GameCardComponent {
+  @Input() game!: Game;
 }

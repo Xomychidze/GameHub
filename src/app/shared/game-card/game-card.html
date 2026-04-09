@@ -1,1 +1,10 @@
-<p>game-card works!</p>
+<div class="game-card">
+
+  <img class="card-image" [src]="game.image" [alt]="game.title" />
+
+  <div class="card-body">
+    <h3>{{ game.title }}</h3>
+    <p class="price">{{ game.price }}$</p>
+  </div>
+
+</div>

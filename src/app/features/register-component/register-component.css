@@ -1,0 +1,44 @@
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+}
+
+.auth-logo {
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+  background: var(--color-card);
+  border-radius: 10px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+input {
+  padding: 10px;
+  border-radius: 6px;
+}
+
+button {
+  padding: 12px;
+  background: var(--color-accent);
+  color: white;
+  border-radius: 6px;
+}
+
+.error {
+  color: red;
+  font-size: 13px;
+}

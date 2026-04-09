@@ -22,7 +22,11 @@
     </div>
 
     <!-- Game Grid -->
-
+    <div class="games-grid">
+      @for (game of games; track game.id) {
+        <app-game-card [game]="game"></app-game-card>
+      }
+    </div>
 
     <ng-template #noResults>
       <div class="no-results">
