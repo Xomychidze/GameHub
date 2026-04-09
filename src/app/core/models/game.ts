@@ -1,4 +1,4 @@
-import {Genre} from './genre';
+import { Genre } from './genre';
 
 export interface Game {
   id: number;
@@ -8,4 +8,10 @@ export interface Game {
   image: string;
   rating: number;
   genre: Genre;
+  // опциональные поля — добавляй по мере необходимости:
+  originalPrice?: number;
+  discount?: number;
+  developer?: string;
+  releaseDate?: string;
+  screenshots?: string[];
 }

@@ -1,4 +1,4 @@
-<div class="game-card">
+<div class="game-card" (click)="goToGame(game.id)">
 
   <img class="card-image" [src]="game.image" [alt]="game.title" />
 
@@ -8,3 +8,7 @@
   </div>
 
 </div>
+
+
+
+

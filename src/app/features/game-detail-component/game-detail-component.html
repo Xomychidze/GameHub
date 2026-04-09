@@ -1,9 +1,126 @@
 <app-header></app-header>
 
 <div class="page-wrapper">
-  <div class="container">
 
-  </div>
+  @if (loading) {
+    <div class="skeleton-screen">
+      <div class="skeleton hero-skeleton"></div>
+      <div class="container skeleton-body">
+        <div class="skeleton cover-skeleton"></div>
+        <div class="skeleton-lines">
+          <div class="skeleton line lg"></div>
+          <div class="skeleton line sm"></div>
+          <div class="skeleton line md"></div>
+        </div>
+      </div>
+    </div>
+  }
+
+  @else if (!game) {
+    <div class="not-found">
+      <span class="not-found-code">404</span>
+      <p class="not-found-msg">Игра не найдена в базе данных.</p>
+      <a routerLink="/catalog" class="btn btn-primary">← В каталог</a>
+    </div>
+  }
+
+  @else {
+
+    <!-- HERO -->
+    <section class="hero" [style.backgroundImage]="'url(' + game.image + ')'">
+      <div class="hero-overlay"></div>
+      <div class="hero-content container">
+        <nav class="breadcrumb">
+          <a routerLink="/">Главная</a>
+          <span>/</span>
+          <a routerLink="/catalog">Каталог</a>
+          <span>/</span>
+          <span class="current">{{ game.title }}</span>
+        </nav>
+      </div>
+    </section>
+
+    <!-- КОНТЕНТ -->
+    <div class="game-layout container">
+
+      <!-- ЛЕВАЯ КОЛОНКА -->
+      <aside class="game-cover-col">
+
+        <div class="cover-wrap">
+          <img class="cover-img" [src]="game.image" [alt]="game.title" />
+          @if (game.discount) {
+            <div class="discount-badge">-{{ game.discount }}%</div>
+          }
+        </div>
+
+        <div class="buy-box">
+          <div class="price-row">
+            @if (game.originalPrice) {
+              <span class="price-original">{{ game.originalPrice }} ₸</span>
+            }
+            <span class="price-final">{{ game.price }} ₸</span>
+          </div>
+          <button class="btn btn-primary btn-block">Добавить в корзину</button>
+          <button class="btn btn-outline btn-block">В список желаний</button>
+        </div>
+
+        <div class="meta-box">
+          <div class="meta-row">
+            <span class="meta-label">Жанр</span>
+            <span class="badge badge-genre">{{ game.genre.name }}</span>
+          </div>
+          @if (game.developer) {
+            <div class="meta-row">
+              <span class="meta-label">Разработчик</span>
+              <span class="meta-value">{{ game.developer }}</span>
+            </div>
+          }
+          @if (game.releaseDate) {
+            <div class="meta-row">
+              <span class="meta-label">Релиз</span>
+              <span class="meta-value">{{ game.releaseDate }}</span>
+            </div>
+          }
+          <div class="meta-row">
+            <span class="meta-label">ID</span>
+            <span class="meta-value">#{{ game.id }}</span>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- ПРАВАЯ КОЛОНКА -->
+      <main class="game-main">
+
+        <div class="game-header">
+          <h1 class="game-title">{{ game.title }}</h1>
+          <div class="rating-row">
+            <span class="stars">★★★★★</span>
+            <span class="rating-score">{{ game.rating }} / 5</span>
+          </div>
+        </div>
+
+        <p class="game-description">{{ game.description }}</p>
+
+        @if (game.screenshots?.length) {
+          <section class="screenshots-section">
+            <h2 class="section-title">Скриншоты <span>&</span> Медиа</h2>
+            <div class="screenshots-grid">
+              @for (shot of game.screenshots; track shot; let i = $index) {
+                <div class="screenshot-item" [class.featured]="i === 0">
+                  <img [src]="shot" [alt]="'Screenshot ' + (i + 1)" />
+                  <div class="screenshot-overlay">🔍</div>
+                </div>
+              }
+            </div>
+          </section>
+        }
+
+      </main>
+    </div>
+
+  }
+
 </div>
 
 <app-footer></app-footer>

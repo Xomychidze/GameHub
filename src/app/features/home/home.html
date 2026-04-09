@@ -1,46 +1,107 @@
 <app-header></app-header>
 
 <div class="page-wrapper">
-
-  <!-- Hero Section -->
   <section class="hero">
     <div class="hero-bg"></div>
+
     <div class="container hero-content">
       <div class="hero-text">
         <span class="hero-tag">New Release</span>
-        <h1 class="hero-title">Your Next<br /><span>Adventure</span><br />Awaits</h1>
-        <p class="hero-sub">Discover thousands of games. Buy once, play forever.</p>
+        <h1 class="hero-title">
+          Your Next<br />
+          <span>Adventure</span><br />
+          Awaits
+        </h1>
+        <p class="hero-sub">
+          Discover thousands of games. Buy once, play forever.
+        </p>
+
         <div class="hero-actions">
           <a routerLink="/store" class="btn btn-primary">Browse Store</a>
           <a routerLink="/library" class="btn btn-outline">My Library</a>
         </div>
       </div>
+
       <div class="hero-visual">
         <div class="hero-card-glow"></div>
-        <img src="assets/image/witcher.jpeg" alt="Featured game" class="hero-img" />
+        <img
+          src="assets/image/witcher.jpeg"
+          alt="Featured game"
+          class="hero-img"
+        />
       </div>
     </div>
   </section>
 
-  <!-- Featured Games -->
   <section class="section container">
-    <h2 class="section-title">Featured <span>Games</span></h2>
-    <div class="games-grid">
-      @for (game of games; track game.id){
-        <app-game-card [game]="game"></app-game-card>
-      }
+    <div class="section-head">
+      <h2 class="section-title">Featured <span>Games</span></h2>
+      <a routerLink="/store" class="section-link">See all</a>
     </div>
-    <div class="see-all">
-      <a routerLink="/store" class="btn btn-outline">See All Games</a>
-    </div>
+
+    @if (loading) {
+      <div class="loading-state">
+        <div class="loading-card"></div>
+        <div class="loading-card"></div>
+        <div class="loading-card"></div>
+        <div class="loading-card"></div>
+      </div>
+    } @else if (displayedGames.length > 0) {
+      <div class="games-grid">
+        @for (game of displayedGames; track game.id) {
+          <app-game-card [game]="game"></app-game-card>
+        }
+      </div>
+
+      <div class="load-wrap">
+        <button
+          class="btn-load"
+          (click)="loadMore()"
+          [disabled]="displayedGames.length >= games.length"
+        >
+          Load more
+        </button>
+
+        <div class="progress-bar">
+          <div
+            class="progress-fill"
+            [style.width.%]="games.length ? (displayedGames.length / games.length) * 100 : 0"
+          ></div>
+        </div>
+
+        <span class="progress-text">
+          Showing {{ displayedGames.length }} of {{ games.length }} games
+        </span>
+      </div>
+    } @else {
+      <div class="empty-state">
+        <p>No games found.</p>
+      </div>
+    }
   </section>
 
-  <!-- Genre Filter Bar -->
   <section class="genres-section container">
     <h2 class="section-title">Browse by <span>Genre</span></h2>
+
+    <div class="genres-grid">
+      <a class="genre-tile" routerLink="/store">
+        <span class="genre-icon">🎮</span>
+        <span class="genre-name">Action</span>
+      </a>
+      <a class="genre-tile" routerLink="/store">
+        <span class="genre-icon">🧠</span>
+        <span class="genre-name">Strategy</span>
+      </a>
+      <a class="genre-tile" routerLink="/store">
+        <span class="genre-icon">🚗</span>
+        <span class="genre-name">Racing</span>
+      </a>
+      <a class="genre-tile" routerLink="/store">
+        <span class="genre-icon">🗺️</span>
+        <span class="genre-name">Adventure</span>
+      </a>
+    </div>
   </section>
-
-
 </div>
 
 <app-footer></app-footer>
