@@ -7,15 +7,68 @@
   <div class="auth-card">
 
     <div class="auth-header">
-      <h1 class="auth-title">Welcome back</h1>
-      <p class="auth-sub">Sign in to your account to continue</p>
+      <h1 class="auth-title">Create account</h1>
+      <p class="auth-sub">Sign up to get started</p>
     </div>
 
+    <form class="auth-form" (ngSubmit)="onLogin()" #form="ngForm">
 
+      <!-- Username -->
+      <div class="field-group">
+        <label class="field-label">Username</label>
+        <div class="input-wrap">
+          <input
+            class="field-input"
+            type="text"
+            name="username"
+            [(ngModel)]="username"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="field-group">
+        <label class="field-label">Password</label>
+        <div class="input-wrap">
+          <input
+            class="field-input"
+            type="password"
+            name="password"
+            [(ngModel)]="password"
+            required
+            minlength="8"
+          />
+        </div>
+      </div>
+
+      <!-- Errors -->
+
+
+      @if (errorMessage) {
+        <div class="auth-error">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <!-- Button -->
+      <button
+        class="submit-btn"
+        type="submit"
+        [disabled]="form.invalid || isLoading"
+      >
+        @if (isLoading) {
+          <span class="spinner"></span>
+        } @else {
+          Create Account
+        }
+      </button>
+
+    </form>
 
     <p class="auth-switch">
-      Don't have an account?
-      <a routerLink="/register" class="switch-link">Create one</a>
+      Already have an account?
+      <a routerLink="/register" class="switch-link">Sign up</a>
     </p>
 
   </div>

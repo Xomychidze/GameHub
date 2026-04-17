@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Footer } from '../../shared/footer/footer';
 import { Header } from '../../shared/header/header';
 import { ActivatedRoute } from '@angular/router';
@@ -8,7 +9,8 @@ import { GameService } from '../../core/services/game-service';
 
 @Component({
   selector: 'app-game-detail-component',
-  imports: [Footer, Header],
+  standalone: true,
+  imports: [Footer, Header, CommonModule],
   templateUrl: './game-detail-component.html',
   styleUrls: ['./game-detail-component.css'],
 })
@@ -16,14 +18,14 @@ export class GameDetailComponent {
   id: number = 0;
   game?: Game;
   loading = true;
+  error = '';
 
   constructor(
     private route: ActivatedRoute,
-    private gameService: GameService
+    private gameService: GameService,
   ) {}
 
   ngOnInit() {
-    // Получаем id из роутера
     this.route.paramMap.subscribe(params => {
       const idParam = params.get('id');
       if (idParam) {
@@ -33,23 +35,23 @@ export class GameDetailComponent {
     });
   }
 
-  // Метод для загрузки одной игры
   loadGame() {
-    this.gameService.getGames().subscribe({
-      next: (data: Game[]) => {
-        this.game = data.find(g => g.id === this.id);
+    this.loading = true;
+    this.gameService.getGameById(this.id).subscribe({
+      next: (data: Game) => {
+        this.game = data;
         this.loading = false;
       },
       error: (err: HttpErrorResponse) => {
-        console.error(err.message);
+        this.error = 'Game not found.';
         this.loading = false;
-      }
+        console.error(err.message);
+      },
     });
   }
 
-
   getStars(rating: number): number[] {
-  return Array(Math.floor(rating)).fill(0);
+    return Array(Math.floor(rating)).fill(0);
   }
 
   getEmptyStars(rating: number): number[] {
