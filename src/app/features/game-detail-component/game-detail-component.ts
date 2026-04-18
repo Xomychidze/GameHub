@@ -1,60 +1,91 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Footer } from '../../shared/footer/footer';
-import { Header } from '../../shared/header/header';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { HttpErrorResponse } from '@angular/common/http';
+import { Header } from '../../shared/header/header';
+import { Footer } from '../../shared/footer/footer';
+import { GameService } from '../../core/services/game.service';
+import { CartService } from '../../core/services/cart.service';
+import { AuthService } from '../../core/services/auth.service';
 import { Game } from '../../core/models/game';
-import { GameService } from '../../core/services/game-service';
+import { Review } from '../../core/models/purchase';
 
 @Component({
   selector: 'app-game-detail-component',
   standalone: true,
-  imports: [Footer, Header, CommonModule],
+  imports: [CommonModule, FormsModule, Header, Footer],
   templateUrl: './game-detail-component.html',
-  styleUrls: ['./game-detail-component.css'],
+  styleUrl: './game-detail-component.css',
 })
-export class GameDetailComponent {
-  id: number = 0;
+export class GameDetailComponent implements OnInit {
   game?: Game;
+  reviews: Review[] = [];
   loading = true;
-  error = '';
+  reviewText = '';
+  reviewRating = 5;
+  reviewError = '';
+  reviewSubmitting = false;
 
   constructor(
     private route: ActivatedRoute,
     private gameService: GameService,
+    public cartService: CartService,
+    public authService: AuthService,
   ) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
-      const idParam = params.get('id');
-      if (idParam) {
-        this.id = Number(idParam);
-        this.loadGame();
-      }
+      const id = Number(params.get('id'));
+      if (id) this.loadGame(id);
     });
   }
 
-  loadGame() {
+  loadGame(id: number) {
     this.loading = true;
-    this.gameService.getGameById(this.id).subscribe({
-      next: (data: Game) => {
-        this.game = data;
+    this.gameService.getGameById(id).subscribe({
+      next: game => {
+        this.game = game;
         this.loading = false;
+        this.gameService.getReviews(id).subscribe(r => this.reviews = r);
       },
-      error: (err: HttpErrorResponse) => {
-        this.error = 'Game not found.';
-        this.loading = false;
-        console.error(err.message);
+      error: () => this.loading = false,
+    });
+  }
+
+  addToCart() {
+    if (this.game) this.cartService.add(this.game);
+  }
+
+  stars(n: number): number[] { return Array(n).fill(0); }
+  emptyStars(n: number): number[] { return Array(5 - n).fill(0); }
+
+  submitReview() {
+    if (!this.game || !this.reviewText.trim()) return;
+    this.reviewSubmitting = true;
+    this.reviewError = '';
+    this.gameService.postReview(this.game.id, { rating: this.reviewRating, text: this.reviewText }).subscribe({
+      next: review => {
+        this.reviews = [review, ...this.reviews];
+        this.reviewText = '';
+        this.reviewRating = 5;
+        this.reviewSubmitting = false;
+      },
+      error: err => {
+        this.reviewError = err.error?.error || err.error?.non_field_errors?.[0] || 'Failed to submit review.';
+        this.reviewSubmitting = false;
       },
     });
   }
 
-  getStars(rating: number): number[] {
-    return Array(Math.floor(rating)).fill(0);
+  likeReview(review: Review) {
+    this.gameService.reviewAction(review.id, 'like').subscribe(updated => {
+      this.reviews = this.reviews.map(r => r.id === updated.id ? updated : r);
+    });
   }
 
-  getEmptyStars(rating: number): number[] {
-    return Array(5 - Math.floor(rating)).fill(0);
+  dislikeReview(review: Review) {
+    this.gameService.reviewAction(review.id, 'dislike').subscribe(updated => {
+      this.reviews = this.reviews.map(r => r.id === updated.id ? updated : r);
+    });
   }
 }

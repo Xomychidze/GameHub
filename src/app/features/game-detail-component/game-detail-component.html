@@ -3,112 +3,126 @@
 <div class="page-wrapper">
 
   @if (loading) {
-    <div class="skeleton-screen">
-      <div class="skeleton hero-skeleton"></div>
-      <div class="container skeleton-body">
-        <div class="skeleton cover-skeleton"></div>
-        <div class="skeleton-lines">
-          <div class="skeleton line lg"></div>
-          <div class="skeleton line sm"></div>
-          <div class="skeleton line md"></div>
-        </div>
-      </div>
+    <div class="skeleton-hero"></div>
+    <div class="container skeleton-body">
+      <div class="skeleton sk-block"></div>
+      <div class="skeleton sk-line lg"></div>
+      <div class="skeleton sk-line sm"></div>
     </div>
-  }
-
-  @else if (!game) {
+  } @else if (!game) {
     <div class="not-found">
-      <span class="not-found-code">404</span>
-      <p class="not-found-msg">Игра не найдена в базе данных.</p>
-      <a routerLink="/catalog" class="btn btn-primary">← В каталог</a>
+      <span class="nf-code">404</span>
+      <p>Game not found.</p>
+      <a routerLink="/store" class="btn btn-primary">← Back to Store</a>
     </div>
-  }
+  } @else {
 
-  @else {
-
-    <!-- HERO — заголовок прямо поверх изображения -->
     <section class="hero" [style.backgroundImage]="'url(' + game.image + ')'">
       <div class="hero-overlay"></div>
-
       <div class="hero-content container">
-
         <div class="hero-meta">
-          <span class="badge badge-genre">{{ game.genre.name }}</span>
-          @if (game.developer) {
-            <span class="hero-tag">{{ game.developer }}</span>
-          }
-          @if (game.releaseDate) {
-            <span class="hero-tag muted">{{ game.releaseDate }}</span>
-          }
+          <span class="badge-genre">{{ game.genre?.name }}</span>
+          @if (game.developer) { <span class="hero-tag">{{ game.developer }}</span> }
+          @if (game.releaseDate) { <span class="hero-tag muted">{{ game.releaseDate }}</span> }
         </div>
-
         <h1 class="game-title">{{ game.title }}</h1>
-
         <div class="rating-row">
-          <span class="stars">★★★★★</span>
-          <span class="rating-score">{{ game.rating }} / 5</span>
+          <span class="stars-filled">
+            @for (s of stars(game.rating); track s) { ★ }
+            @for (s of emptyStars(game.rating); track s) { ☆ }
+          </span>
+          <span class="rating-score">{{ game.rating | number:'1.1-1' }} / 5</span>
         </div>
       </div>
     </section>
 
-    <!-- КОНТЕНТ -->
     <div class="game-layout container">
 
-      <!-- ПРАВАЯ КОЛОНКА (sidebar) -->
       <aside class="game-sidebar">
-
-        <!-- Обложка с ценой поверх -->
         <div class="cover-card">
           <div class="cover-wrap">
             <img class="cover-img" [src]="game.image" [alt]="game.title" />
-            <div class="cover-gradient"></div>
             @if (game.discount) {
               <div class="discount-badge">-{{ game.discount }}%</div>
             }
             <div class="cover-price">
               @if (game.originalPrice) {
-                <span class="price-original">{{ game.originalPrice }} ₸</span>
+                <span class="price-original">{{ game.originalPrice | number }} ₸</span>
               }
-              <span class="price-final">{{ game.price }} ₸</span>
+              <span class="price-final">{{ game.price | number }} ₸</span>
             </div>
           </div>
-
           <div class="buy-actions">
-            <button class="btn btn-primary btn-block btn-glow">Добавить в корзину</button>
-            <button class="btn btn-outline btn-block">В список желаний</button>
+            <button class="btn btn-primary btn-block btn-glow"
+                    [class.in-cart]="cartService.has(game.id)"
+                    (click)="addToCart()">
+              {{ cartService.has(game.id) ? '✓ In Cart' : 'Add to Cart' }}
+            </button>
+            <a routerLink="/cart" class="btn btn-outline btn-block" *ngIf="cartService.has(game.id)">
+              Go to Cart →
+            </a>
           </div>
         </div>
-
       </aside>
 
-      <!-- ЛЕВАЯ КОЛОНКА (основной контент) -->
       <main class="game-main">
-
         <section class="description-section">
-          <h2 class="section-title"><span class="title-line"></span> Об игре</h2>
+          <h2 class="section-title"><span class="title-line"></span> About</h2>
           <p class="game-description">{{ game.description }}</p>
         </section>
 
-        @if (game.screenshots?.length) {
-          <section class="screenshots-section">
-            <h2 class="section-title"><span class="title-line"></span> Скриншоты</h2>
-            <div class="screenshots-grid">
-              @for (shot of game.screenshots; track shot; let i = $index) {
-                <div class="screenshot-item" [class.featured]="i === 0">
-                  <img [src]="shot" [alt]="'Screenshot ' + (i + 1)" />
-                  <div class="screenshot-overlay">⬡</div>
-                </div>
-              }
-            </div>
-          </section>
-        }
+        <!-- REVIEWS -->
+        <section class="reviews-section">
+          <h2 class="section-title"><span class="title-line"></span> Reviews ({{ reviews.length }})</h2>
 
+          @if (authService.isLoggedIn) {
+            <div class="review-form">
+              <div class="rating-picker">
+                @for (star of [1,2,3,4,5]; track star) {
+                  <span class="star-pick"
+                        [class.active]="reviewRating >= star"
+                        (click)="reviewRating = star">★</span>
+                }
+              </div>
+              <textarea class="review-textarea"
+                        placeholder="Share your thoughts about this game..."
+                        [(ngModel)]="reviewText" rows="3"></textarea>
+              @if (reviewError) { <p class="form-error">{{ reviewError }}</p> }
+              <button class="btn btn-primary" (click)="submitReview()" [disabled]="reviewSubmitting">
+                {{ reviewSubmitting ? 'Submitting…' : 'Post Review' }}
+              </button>
+            </div>
+          } @else {
+            <p class="login-prompt">
+              <a routerLink="/login">Log in</a> to leave a review.
+            </p>
+          }
+
+          @if (reviews.length === 0) {
+            <p class="no-reviews">No reviews yet. Be the first!</p>
+          }
+
+          @for (review of reviews; track review.id) {
+            <div class="review-card">
+              <div class="review-header">
+                <span class="review-user">{{ review.username }}</span>
+                <span class="review-stars">
+                  @for (s of stars(review.rating); track s) { ★ }
+                </span>
+                <span class="review-date">{{ review.createdAt | date:'mediumDate' }}</span>
+              </div>
+              <p class="review-text">{{ review.text }}</p>
+              <div class="review-actions">
+                <button class="vote-btn" (click)="likeReview(review)">👍 {{ review.likes }}</button>
+                <button class="vote-btn" (click)="dislikeReview(review)">👎 {{ review.dislikes }}</button>
+              </div>
+            </div>
+          }
+        </section>
       </main>
 
     </div>
-
   }
-
 </div>
 
 <app-footer></app-footer>

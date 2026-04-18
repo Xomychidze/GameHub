@@ -1,46 +1,46 @@
 .game-card {
-  background: var(--bg-secondary);
-  border-radius: 10px;
+  background: var(--surface-2, #1a1a2e);
+  border-radius: 12px;
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.game-card:hover {
-  transform: translateY(-4px);
-}
-
-.card-image {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-}
-
-.card-body {
-  padding: 10px;
-}
-
-.card-title {
-  font-size: 16px;
-  margin-bottom: 5px;
-}
-
-.card-genre {
-  font-size: 12px;
-  color: var(--text-secondary);
-}
-
-.card-footer {
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
+  flex-direction: column;
+}
+.game-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.4); }
+
+.card-image-wrap { position: relative; aspect-ratio: 16/9; overflow: hidden; }
+.card-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+.game-card:hover .card-image { transform: scale(1.04); }
+.card-discount {
+  position: absolute; top: 10px; right: 10px;
+  background: #e74c3c; color: #fff;
+  font-size: 0.75rem; font-weight: 700;
+  padding: 3px 8px; border-radius: 4px;
 }
 
-.price {
-  color: var(--accent);
-  font-weight: bold;
-}
+.card-body { padding: 14px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+.card-genre { font-size: 0.7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--accent, #6c63ff); font-weight: 600; }
+.card-title { font-size: 1rem; font-weight: 700; color: var(--text-primary, #fff); margin: 0; }
+.card-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+.card-rating { font-size: 0.82rem; color: #f5c518; }
+.star { color: #f5c518; }
+.card-price { display: flex; flex-direction: column; align-items: flex-end; }
+.price-old { font-size: 0.75rem; color: var(--text-muted, #888); text-decoration: line-through; }
+.price-now { font-size: 0.95rem; font-weight: 700; color: var(--text-primary, #fff); }
 
-.rating {
-  font-size: 14px;
+.btn-add-cart {
+  margin-top: auto;
+  padding: 9px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent, #6c63ff);
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
 }
+.btn-add-cart:hover { background: var(--accent-hover, #574fd6); transform: scale(1.02); }
+.btn-add-cart.in-cart { background: #2ecc71; cursor: default; }

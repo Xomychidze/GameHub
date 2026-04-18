@@ -113,3 +113,29 @@
 }
 
 .btn-sm { padding: 8px 18px; font-size: 13px; }
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: background 0.2s;
+}
+.user-chip:hover { background: rgba(255,255,255,0.1); }
+.btn-outline {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.25);
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+.btn-outline:hover { border-color: rgba(255,255,255,0.5); color: var(--text-primary); }

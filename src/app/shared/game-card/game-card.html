@@ -1,14 +1,28 @@
-<div class="game-card" (click)="goToGame(game.id)">
-
-  <img class="card-image" [src]="game.image" [alt]="game.title" />
-
-  <div class="card-body">
-    <h3>{{ game.title }}</h3>
-    <p class="price">{{ game.price }}$</p>
+<div class="game-card" (click)="goToGame()">
+  <div class="card-image-wrap">
+    <img class="card-image" [src]="game.image" [alt]="game.title" />
+    @if (game.discount) {
+      <span class="card-discount">-{{ game.discount }}%</span>
+    }
   </div>
-
+  <div class="card-body">
+    <span class="card-genre">{{ game.genre?.name }}</span>
+    <h3 class="card-title">{{ game.title }}</h3>
+    <div class="card-meta">
+      <div class="card-rating">
+        <span class="star">★</span> {{ game.rating | number:'1.1-1' }}
+      </div>
+      <div class="card-price">
+        @if (game.originalPrice) {
+          <span class="price-old">{{ game.originalPrice | number }} ₸</span>
+        }
+        <span class="price-now">{{ game.price | number }} ₸</span>
+      </div>
+    </div>
+    <button class="btn-add-cart"
+            [class.in-cart]="cartService.has(game.id)"
+            (click)="addToCart($event)">
+      {{ cartService.has(game.id) ? '✓ In Cart' : '+ Add to Cart' }}
+    </button>
+  </div>
 </div>
-
-
-
-

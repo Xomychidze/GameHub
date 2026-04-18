@@ -1,26 +1,55 @@
 <app-header></app-header>
-
 <div class="page-wrapper">
   <div class="container">
-
-    <div class="library-header">
-
+    <div class="lib-header">
+      <h1 class="section-title">My <span>Library</span></h1>
+      @if (!loading) { <p class="lib-count">{{ purchases.length }} games owned</p> }
     </div>
 
-    <!-- Search bar -->
-    <div class="library-search">
-      <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <div class="lib-search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
         <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
       </svg>
-
+      <input type="text" placeholder="Search your library..." [(ngModel)]="search" (ngModelChange)="onSearch()" class="search-input" />
     </div>
 
-    <!-- Grid View -->
-
-    <!-- List View -->
-
-    <!-- Empty library -->
-
+    @if (loading) {
+      <div class="lib-grid">
+        @for (i of [1,2,3,4,5,6]; track i) {
+          <div class="skeleton-card">
+            <div class="skeleton img-sk"></div>
+            <div class="skeleton line-sk lg"></div>
+          </div>
+        }
+      </div>
+    } @else if (purchases.length === 0) {
+      <div class="empty-lib">
+        <span class="empty-icon">◈</span>
+        <h2>Your library is empty</h2>
+        <p>Head to the store and grab your first game!</p>
+        <a routerLink="/store" class="btn btn-primary">Browse Store</a>
+      </div>
+    } @else if (filtered.length === 0) {
+      <p class="no-results">No games match "{{ search }}"</p>
+    } @else {
+      <div class="lib-grid">
+        @for (p of filtered; track p.id) {
+          <div class="lib-card" [routerLink]="['/games', p.game.id]">
+            <div class="lib-img-wrap">
+              <img [src]="p.game.image" [alt]="p.game.title" class="lib-img" />
+              <div class="lib-overlay">
+                <span class="play-btn">▶ View</span>
+              </div>
+            </div>
+            <div class="lib-info">
+              <span class="lib-genre">{{ p.game.genre?.name }}</span>
+              <h3 class="lib-title">{{ p.game.title }}</h3>
+              <span class="lib-date">Purchased {{ p.purchasedAt | date:'mediumDate' }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
 </div>
-
 <app-footer></app-footer>

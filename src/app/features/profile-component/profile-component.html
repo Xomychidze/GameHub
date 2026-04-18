@@ -1,0 +1,69 @@
+<app-header></app-header>
+<div class="page-wrapper">
+  <div class="container">
+
+    @if (loading) {
+      <div class="skeleton sk-avatar"></div>
+    } @else if (profile) {
+      <div class="profile-hero">
+        <div class="avatar-ring">
+          <div class="avatar-letter">{{ profile.username[0].toUpperCase() }}</div>
+        </div>
+        <div class="profile-meta">
+          <h1 class="profile-name">{{ profile.username }}</h1>
+          <p class="profile-email">{{ profile.email }}</p>
+          <span class="profile-badge">{{ profile.purchasedGames.length }} games owned</span>
+        </div>
+      </div>
+
+      <div class="profile-body">
+        <!-- BIO -->
+        <section class="profile-card">
+          <div class="card-head">
+            <h2 class="card-title">Bio</h2>
+            @if (!editing) {
+              <button class="btn-edit" (click)="startEdit()">Edit</button>
+            }
+          </div>
+          @if (editing) {
+            <textarea class="bio-textarea" [(ngModel)]="bioEdit" rows="4" placeholder="Tell something about yourself..."></textarea>
+            <div class="bio-actions">
+              <button class="btn btn-primary btn-sm" (click)="saveBio()" [disabled]="saving">
+                {{ saving ? 'Saving…' : 'Save' }}
+              </button>
+              <button class="btn btn-ghost btn-sm" (click)="editing = false">Cancel</button>
+            </div>
+          } @else {
+            <p class="bio-text">{{ profile.bio || 'No bio yet.' }}</p>
+            @if (saveMsg) { <span class="save-msg">{{ saveMsg }}</span> }
+          }
+        </section>
+
+        <!-- RECENT PURCHASES -->
+        <section class="profile-card">
+          <h2 class="card-title">Recent Purchases</h2>
+          @if (profile.purchasedGames.length === 0) {
+            <p class="empty-text">No games yet. <a routerLink="/store">Browse store</a></p>
+          } @else {
+            <div class="purchase-list">
+              @for (p of profile.purchasedGames.slice(0,6); track p.id) {
+                <a class="purchase-row" [routerLink]="['/games', p.game.id]">
+                  <img [src]="p.game.image" [alt]="p.game.title" class="purchase-img" />
+                  <div class="purchase-info">
+                    <span class="purchase-title">{{ p.game.title }}</span>
+                    <span class="purchase-date">{{ p.purchasedAt | date:'mediumDate' }}</span>
+                  </div>
+                  <span class="purchase-price">{{ p.price | number }} ₸</span>
+                </a>
+              }
+            </div>
+            @if (profile.purchasedGames.length > 6) {
+              <a routerLink="/library" class="see-all">See all in Library →</a>
+            }
+          }
+        </section>
+      </div>
+    }
+  </div>
+</div>
+<app-footer></app-footer>

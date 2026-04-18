@@ -1,44 +1,85 @@
-# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+########################################
+# OS
+########################################
+.DS_Store
+Thumbs.db
 
-# Compiled output
-/dist
-/tmp
-/out-tsc
-/bazel-out
-
-# Node
-/node_modules
-npm-debug.log
-yarn-error.log
-
-# IDEs and editors
+########################################
+# IDE
+########################################
 .idea/
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# Visual Studio Code
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
 !.vscode/mcp.json
-.history/*
+.history/
 
-# Miscellaneous
-/.angular/cache
+########################################
+# Node / Frontend (Angular, React, etc.)
+########################################
+node_modules/
+dist/
+out-tsc/
+build/
+coverage/
+
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+.angular/cache/
 .sass-cache/
-/connect.lock
-/coverage
-/libpeerconnection.log
-testem.log
-/typings
-__screenshots__/
 
-# System files
-.DS_Store
-Thumbs.db
+########################################
+# Python
+########################################
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+########################################
+# Virtual environments
+########################################
+venv/
+env/
+.venv/
+
+########################################
+# Django
+########################################
+db.sqlite3
+*.log
+media/
+staticfiles/
+local_settings.py
+
+########################################
+# Environment variables
+########################################
+.env
+.env.*
+!.env.example
+
+########################################
+# Packaging / build
+########################################
+dist/
+build/
+*.egg-info/
+
+########################################
+# Testing
+########################################
+.pytest_cache/
+.coverage
+.tox/
+
+########################################
+# Misc
+########################################
+*.swp
+*.swo
+*.lock

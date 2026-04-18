@@ -1,8 +1,9 @@
 from pathlib import Path
+from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-d1^s13hl*0jgaj3e5(1^(vg4biaa@*^&^&qng!!3oq5@wps&ep'
+SECRET_KEY = 'django-insecure-gamehub-change-this-in-production-please!!'
 
 DEBUG = True
 
@@ -18,13 +19,14 @@ INSTALLED_APPS = [
     # Third-party
     'corsheaders',
     'rest_framework',
+    'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     # Local
     'api',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',          # ← должен быть ПЕРВЫМ
+    'corsheaders.middleware.CorsMiddleware',   # ← MUST be first
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -73,12 +75,15 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = 'static/'
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ── CORS ──────────────────────────────────────────────────────────────────────
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',   # Angular dev server
+    'http://localhost:4200',
+    'http://127.0.0.1:4200',
 ]
 CORS_ALLOW_CREDENTIALS = True
 
@@ -90,4 +95,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
+}
+
+# ── Simple JWT ────────────────────────────────────────────────────────────────
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }

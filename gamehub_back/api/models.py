@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Genre(models.Model):
     name = models.CharField(max_length=200)
-    description = models.TextField()
+    description = models.TextField(blank=True, default='')
     slug = models.CharField(max_length=200, blank=True, default='')
 
     def __str__(self):
@@ -29,23 +29,38 @@ class Game(models.Model):
 
 
 class Purchase(models.Model):
-    """Покупка игры пользователем"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='purchases')
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='purchases')
     price = models.FloatField()
     purchased_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        unique_together = ('user', 'game')
+
     def __str__(self):
         return f"{self.user.username} — {self.game.title}"
 
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    bio = models.TextField(blank=True, default='')
+    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username
+
+
 class Review(models.Model):
-    """Отзыв пользователя на игру"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reviews')
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='reviews')
-    rating = models.FloatField()
+    rating = models.FloatField(default=5.0)
     text = models.TextField()
+    likes = models.IntegerField(default=0)
+    dislikes = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('user', 'game')
 
     def __str__(self):
         return f"{self.user.username} → {self.game.title} ({self.rating}★)"

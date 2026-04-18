@@ -3,37 +3,65 @@
 <div class="page-wrapper">
   <div class="container">
 
-    <!-- Page heading -->
     <div class="store-header">
       <h1 class="section-title">Game <span>Store</span></h1>
-
+      <p class="store-subtitle">{{ games.length }} games available</p>
     </div>
 
-    <!-- Filters & Sort -->
     <div class="filters-bar">
+      <!-- Search -->
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <input type="text" placeholder="Search games..." class="search-input"
+               [(ngModel)]="searchQuery" (ngModelChange)="onSearch()" />
+      </div>
+
+      <!-- Genre pills -->
       <div class="genre-filters">
-
+        <button class="pill" [class.active]="selectedGenre === null" (click)="onGenreChange(null)">All</button>
+        @for (g of genres; track g.id) {
+          <button class="pill" [class.active]="selectedGenre === g.id" (click)="onGenreChange(g.id)">
+            {{ g.name }}
+          </button>
+        }
       </div>
 
+      <!-- Sort -->
       <div class="sort-wrap">
-        <label>Sort by</label>
-
+        <select class="sort-select" [(ngModel)]="sortBy" (ngModelChange)="onSort()">
+          <option value="title">Name A–Z</option>
+          <option value="-title">Name Z–A</option>
+          <option value="price">Price ↑</option>
+          <option value="-price">Price ↓</option>
+          <option value="-rating">Top Rated</option>
+        </select>
       </div>
     </div>
 
-    <!-- Game Grid -->
-    <div class="games-grid">
-      @for (game of games; track game.id) {
-        <app-game-card [game]="game"></app-game-card>
-      }
-    </div>
-
-    <ng-template #noResults>
+    @if (loading) {
+      <div class="games-grid">
+        @for (i of [1,2,3,4,5,6]; track i) {
+          <div class="skeleton-card">
+            <div class="skeleton img-sk"></div>
+            <div class="skeleton line-sk lg"></div>
+            <div class="skeleton line-sk sm"></div>
+          </div>
+        }
+      </div>
+    } @else if (games.length === 0) {
       <div class="no-results">
-        <span class="no-results-icon">◈</span>
-        <p>No games found for this filter.</p>
+        <span class="no-icon">◈</span>
+        <p>No games found. Try a different filter.</p>
       </div>
-    </ng-template>
+    } @else {
+      <div class="games-grid">
+        @for (game of games; track game.id) {
+          <app-game-card [game]="game"></app-game-card>
+        }
+      </div>
+    }
 
   </div>
 </div>

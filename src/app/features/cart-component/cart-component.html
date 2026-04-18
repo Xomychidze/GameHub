@@ -1,24 +1,64 @@
 <app-header></app-header>
-
 <div class="page-wrapper">
   <div class="container">
+    <h1 class="section-title">Shopping <span>Cart</span></h1>
 
-    <h1 class="section-title" style="padding-top: 48px;">Shopping <span>Cart</span></h1>
-
-
-    <ng-template #emptyCart>
+    @if (success) {
+      <div class="success-box">
+        <span class="success-icon">✓</span>
+        <div>
+          <h3>Purchase complete!</h3>
+          <p>Your games are now in your <a routerLink="/library">Library</a>.</p>
+        </div>
+      </div>
+    } @else if (cartService.items.length === 0) {
       <div class="empty-cart">
         <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
           <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
           <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
         </svg>
         <h2>Your cart is empty</h2>
-        <p>Browse our store to find your next game.</p>
+        <p>Browse the store to find your next game.</p>
         <a routerLink="/store" class="btn btn-primary">Go to Store</a>
       </div>
-    </ng-template>
+    } @else {
+      <div class="cart-layout">
+        <div class="cart-items">
+          @for (game of cartService.items; track game.id) {
+            <div class="cart-item">
+              <img [src]="game.image" [alt]="game.title" class="item-img" />
+              <div class="item-info">
+                <span class="item-genre">{{ game.genre?.name }}</span>
+                <h3 class="item-title">{{ game.title }}</h3>
+                @if (game.developer) { <p class="item-dev">{{ game.developer }}</p> }
+              </div>
+              <div class="item-right">
+                <span class="item-price">{{ game.price | number }} ₸</span>
+                <button class="btn-remove" (click)="remove(game)" title="Remove">✕</button>
+              </div>
+            </div>
+          }
+        </div>
 
+        <div class="cart-summary">
+          <h3 class="summary-title">Order Summary</h3>
+          <div class="summary-row">
+            <span>Items ({{ cartService.count }})</span>
+            <span>{{ cartService.total | number }} ₸</span>
+          </div>
+          <div class="summary-divider"></div>
+          <div class="summary-row total">
+            <span>Total</span>
+            <span>{{ cartService.total | number }} ₸</span>
+          </div>
+          @if (error) { <p class="form-error">{{ error }}</p> }
+          <button class="btn btn-primary btn-block btn-glow"
+                  (click)="checkout()" [disabled]="purchasing">
+            {{ purchasing ? 'Processing…' : 'Checkout' }}
+          </button>
+        </div>
+      </div>
+    }
   </div>
 </div>
-
 <app-footer></app-footer>

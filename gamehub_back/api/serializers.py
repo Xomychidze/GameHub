@@ -1,9 +1,9 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Genre, Game, Purchase, Review
+from .models import Genre, Game, Purchase, Profile, Review
 
 
-# ─── Plain Serializers (serializers.Serializer) ──────────────────────────────
+# ── Plain Serializers ──────────────────────────────────────────────────────────
 
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150)
@@ -13,6 +13,11 @@ class RegisterSerializer(serializers.Serializer):
     def validate_username(self, value):
         if User.objects.filter(username=value).exists():
             raise serializers.ValidationError("Username already taken.")
+        return value
+
+    def validate_email(self, value):
+        if User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("Email already registered.")
         return value
 
     def create(self, validated_data):
@@ -28,7 +33,11 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
 
-# ─── ModelSerializers ─────────────────────────────────────────────────────────
+class ReviewActionSerializer(serializers.Serializer):
+    action = serializers.ChoiceField(choices=['like', 'dislike'])
+
+
+# ── ModelSerializers ──────────────────────────────────────────────────────────
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -41,7 +50,7 @@ class GameSerializer(serializers.ModelSerializer):
     genre_id = serializers.PrimaryKeyRelatedField(
         queryset=Genre.objects.all(), source='genre', write_only=True, required=False
     )
-    # Переименовываем поля под camelCase для Angular
+    # camelCase aliases for Angular
     releaseDate = serializers.CharField(source='release_date', required=False)
     originalPrice = serializers.FloatField(
         source='original_price', required=False, allow_null=True
@@ -70,12 +79,26 @@ class PurchaseSerializer(serializers.ModelSerializer):
         read_only_fields = ['price', 'purchasedAt']
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.EmailField(source='user.email', read_only=True)
+    purchasedGames = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Profile
+        fields = ['id', 'username', 'email', 'bio', 'avatar', 'purchasedGames']
+
+    def get_purchasedGames(self, obj):
+        purchases = obj.user.purchases.select_related('game', 'game__genre')
+        return PurchaseSerializer(purchases, many=True).data
+
+
 class ReviewSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)
     createdAt = serializers.DateTimeField(source='created_at', read_only=True)
 
     class Meta:
         model = Review
-        fields = ['id', 'username', 'game', 'rating', 'text', 'createdAt']
-        read_only_fields = ['createdAt']
+        fields = ['id', 'username', 'game', 'rating', 'text', 'likes', 'dislikes', 'createdAt']
+        read_only_fields = ['likes', 'dislikes', 'createdAt']
         extra_kwargs = {'game': {'write_only': True}}
