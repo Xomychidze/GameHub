@@ -9,21 +9,26 @@
       <div class="skeleton sk-line lg"></div>
       <div class="skeleton sk-line sm"></div>
     </div>
+
   } @else if (!game) {
     <div class="not-found">
       <span class="nf-code">404</span>
       <p>Game not found.</p>
       <a routerLink="/store" class="btn btn-primary">← Back to Store</a>
     </div>
-  } @else {
 
+  } @else {
     <section class="hero" [style.backgroundImage]="'url(' + game.image + ')'">
       <div class="hero-overlay"></div>
       <div class="hero-content container">
         <div class="hero-meta">
-          <span class="badge-genre">{{ game.genre?.name }}</span>
-          @if (game.developer) { <span class="hero-tag">{{ game.developer }}</span> }
-          @if (game.releaseDate) { <span class="hero-tag muted">{{ game.releaseDate }}</span> }
+          <span class="badge-genre">{{ game.genre.name }}</span>
+          @if (game.developer) {
+            <span class="hero-tag">{{ game.developer }}</span>
+          }
+          @if (game.releaseDate) {
+            <span class="hero-tag muted">{{ game.releaseDate }}</span>
+          }
         </div>
         <h1 class="game-title">{{ game.title }}</h1>
         <div class="rating-row">
@@ -53,14 +58,16 @@
             </div>
           </div>
           <div class="buy-actions">
-            <button class="btn btn-primary btn-block btn-glow"
-                    [class.in-cart]="cartService.has(game.id)"
-                    (click)="addToCart()">
+            <button
+              class="btn btn-primary btn-block btn-glow"
+              [class.in-cart]="cartService.has(game.id)"
+              (click)="addToCart()"
+            >
               {{ cartService.has(game.id) ? '✓ In Cart' : 'Add to Cart' }}
             </button>
-            <a routerLink="/cart" class="btn btn-outline btn-block" *ngIf="cartService.has(game.id)">
-              Go to Cart →
-            </a>
+            @if (cartService.has(game.id)) {
+              <a routerLink="/cart" class="btn btn-outline btn-block">Go to Cart →</a>
+            }
           </div>
         </div>
       </aside>
@@ -71,23 +78,31 @@
           <p class="game-description">{{ game.description }}</p>
         </section>
 
-        <!-- REVIEWS -->
         <section class="reviews-section">
-          <h2 class="section-title"><span class="title-line"></span> Reviews ({{ reviews.length }})</h2>
+          <h2 class="section-title">
+            <span class="title-line"></span> Reviews ({{ reviews.length }})
+          </h2>
 
           @if (authService.isLoggedIn) {
             <div class="review-form">
               <div class="rating-picker">
                 @for (star of [1,2,3,4,5]; track star) {
-                  <span class="star-pick"
-                        [class.active]="reviewRating >= star"
-                        (click)="reviewRating = star">★</span>
+                  <span
+                    class="star-pick"
+                    [class.active]="reviewRating >= star"
+                    (click)="reviewRating = star"
+                  >★</span>
                 }
               </div>
-              <textarea class="review-textarea"
-                        placeholder="Share your thoughts about this game..."
-                        [(ngModel)]="reviewText" rows="3"></textarea>
-              @if (reviewError) { <p class="form-error">{{ reviewError }}</p> }
+              <textarea
+                class="review-textarea"
+                placeholder="Share your thoughts about this game..."
+                [(ngModel)]="reviewText"
+                rows="3"
+              ></textarea>
+              @if (reviewError) {
+                <p class="form-error">{{ reviewError }}</p>
+              }
               <button class="btn btn-primary" (click)="submitReview()" [disabled]="reviewSubmitting">
                 {{ reviewSubmitting ? 'Submitting…' : 'Post Review' }}
               </button>
@@ -123,6 +138,7 @@
 
     </div>
   }
+
 </div>
 
 <app-footer></app-footer>

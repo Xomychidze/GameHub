@@ -16,7 +16,7 @@ from .serializers import (
 )
 
 
-# ─── AUTH ─────────────────────────────────────────────────────────────────────
+# AUTH
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -64,7 +64,7 @@ def logout_view(request: Request) -> Response:
     return Response({'message': 'Logged out'})
 
 
-# ─── GAMES ────────────────────────────────────────────────────────────────────
+# GAMES
 
 @api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
@@ -129,8 +129,7 @@ class GameDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# ─── GENRES ───────────────────────────────────────────────────────────────────
-
+# GENRES
 class GenreListView(APIView):
     permission_classes = [AllowAny]
 
@@ -156,7 +155,7 @@ class GenreDetailView(APIView):
         return Response(GenreSerializer(genre).data)
 
 
-# ─── PURCHASES ────────────────────────────────────────────────────────────────
+# PURCHASES
 
 class PurchaseView(APIView):
     permission_classes = [IsAuthenticated]
@@ -198,7 +197,7 @@ class PurchaseDetailView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-# ─── PROFILE ──────────────────────────────────────────────────────────────────
+# PROFILE
 
 class ProfileView(APIView):
     permission_classes = [IsAuthenticated]
@@ -216,8 +215,7 @@ class ProfileView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# ─── REVIEWS ──────────────────────────────────────────────────────────────────
-
+# REVIEWS
 class ReviewView(APIView):
     permission_classes = [AllowAny]
 

@@ -22,6 +22,7 @@ class Game(models.Model):
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE, related_name='games')
     developer = models.CharField(max_length=200, blank=True, default='')
     release_date = models.CharField(max_length=100, blank=True, default='TBA')
+    screenshots = models.JSONField(default=list, blank=True)  # ← добавлено
     is_active = models.BooleanField(default=True)
 
     def __str__(self):

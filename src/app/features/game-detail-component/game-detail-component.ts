@@ -46,6 +46,8 @@ export class GameDetailComponent implements OnInit {
       next: game => {
         this.game = game;
         this.loading = false;
+        // ← лог теперь внутри коллбэка, где game уже загружен
+        console.log('game loaded:', this.game);
         this.gameService.getReviews(id).subscribe(r => this.reviews = r);
       },
       error: () => this.loading = false,
@@ -56,8 +58,16 @@ export class GameDetailComponent implements OnInit {
     if (this.game) this.cartService.add(this.game);
   }
 
-  stars(n: number): number[] { return Array(n).fill(0); }
-  emptyStars(n: number): number[] { return Array(5 - n).fill(0); }
+  // Math.round + clamp [0..5] — защита от дробных и выходящих за диапазон значений
+  stars(n: number): number[] {
+    const count = Math.min(5, Math.max(0, Math.round(n)));
+    return Array(count).fill(0);
+  }
+
+  emptyStars(n: number): number[] {
+    const filled = Math.min(5, Math.max(0, Math.round(n)));
+    return Array(5 - filled).fill(0);
+  }
 
   submitReview() {
     if (!this.game || !this.reviewText.trim()) return;

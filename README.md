@@ -11,7 +11,7 @@ A full-stack game store app: **Django REST API** backend + **Angular 19** fronte
 ```bash
 cd gamehub_back
 python -m venv venv
-source venv/bin/activate          # Windows: venv\Scripts\activate
+venv\Scripts\Activate.ps1     # Windows: venv\Scripts\activate
 pip install -r requirements.txt
 python manage.py migrate
 python seed_data.py               # seeds genres, games, admin user

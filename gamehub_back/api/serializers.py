@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from .models import Genre, Game, Purchase, Profile, Review
 
 
-# ── Plain Serializers ──────────────────────────────────────────────────────────
+# ── Plain Serializers ────────────────────────────────────────────────────────
 
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150)
@@ -37,7 +37,7 @@ class ReviewActionSerializer(serializers.Serializer):
     action = serializers.ChoiceField(choices=['like', 'dislike'])
 
 
-# ── ModelSerializers ──────────────────────────────────────────────────────────
+# ── Model Serializers ────────────────────────────────────────────────────────
 
 class GenreSerializer(serializers.ModelSerializer):
     class Meta:
@@ -50,11 +50,12 @@ class GameSerializer(serializers.ModelSerializer):
     genre_id = serializers.PrimaryKeyRelatedField(
         queryset=Genre.objects.all(), source='genre', write_only=True, required=False
     )
-    # camelCase aliases for Angular
+    # camelCase aliases — совместимость с Angular
     releaseDate = serializers.CharField(source='release_date', required=False)
     originalPrice = serializers.FloatField(
         source='original_price', required=False, allow_null=True
     )
+    screenshots = serializers.JSONField(required=False, default=list)  # ← добавлено
 
     class Meta:
         model = Game
@@ -62,7 +63,9 @@ class GameSerializer(serializers.ModelSerializer):
             'id', 'title', 'price', 'originalPrice', 'discount',
             'description', 'image', 'rating',
             'genre', 'genre_id',
-            'developer', 'releaseDate', 'is_active',
+            'developer', 'releaseDate',
+            'screenshots',   # ← добавлено
+            'is_active',
         ]
 
 
